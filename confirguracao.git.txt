@@ -1,0 +1,6 @@
+git config --global user.name celiszin
+git config --global user.email teste153ovo@gmail.com
+
+Abrir o terminal ctrl + '
+
+dotnet new mvc -o Pokedex
