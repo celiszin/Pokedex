@@ -1,8 +1,63 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Pokedex.ViewModels.HomeVM
+@{
+    ViewData["Title"] = "Home";
+    string BackgroundColor(string cor)
+    {
+        return cor.Replace("1)", "0.75)");
+    };
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="pt-5 container">
+    <div class="row">
+        <div class="col mx-auto text-center">
+            <h1 class="display-4 text-white">Pokédex</h1>
+            <div class="my-3">
+                <button id="btn-all" class="btn btn-md my-2 text-white bg-secondary btn-filter" onclick="filter('')">
+                    Ver Todos
+                </button>
+
+                @foreach (var tipo in Model.Tipos)
+                {
+                    <button id="btn-@tipo.Nome" class="btn btn-sm my-2 text-white btn-filter"
+                        style="background-color:@tipo.Cor" onclick="filter('@tipo.Nome')">@tipo.Nome</button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+
+        @foreach (var pokemon in Model.Pokemons)
+        {
+            <!-- Card Pokemon - Inicio -->
+            <div class="col poke @string.Join(' ', pokemon.Tipos.Select(t => t.Tipo.Nome))">
+                <a asp-action="Details" asp-route-id="@pokemon.Numero" class="text-decoration-none">
+                    <div class="card" style="background-color: @BackgroundColor(pokemon.Tipos.ToArray()[0].Tipo.Cor)">
+                        <img src="@pokemon.Imagem" class="card-img-top" alt="@pokemon.Nome" />
+                        <div class="card-body">
+                            <h5 class="card-text mb-1 text-white">Nº @pokemon.Numero.ToString("000")</h5>
+                            <h3 class="card-title text-dark">@pokemon.Nome</h3>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-2 my-2">
+                                    @foreach (var tipo in pokemon.Tipos)
+                                    {
+                                        <a href="#" class="btn text-white"
+                                            style="background-color:@tipo.Tipo.Cor">@tipo.Tipo.Nome</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Card Pokemon - Fim -->
+        }
+    </div>
+    <div id="zeroPokemon" class="col-lg-12 text-center d-none mt-5" style="height: 350px;">
+        <h1 class="my-3 text-danger">Nenhum Pokemon Encontrado</h1>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}
